@@ -7,16 +7,16 @@
 <h2 class="text-center">Total Sum: {{ total_sum }} UZS</h2>
 
 <div class="dropdown text-center">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
         Filter Transactions
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li><a class="dropdown-item" href="?filter=all">All</a></li>
-        <li><a class="dropdown-item" href="?filter=today">Today</a></li>
-        <li><a class="dropdown-item" href="?filter=yesterday">Yesterday</a></li>
-        <li><a class="dropdown-item" href="?filter=week">This Week</a></li>
-        <li><a class="dropdown-item" href="?filter=month">This Month</a></li>
-        <li><a class="dropdown-item" href="?filter=year">This Year</a></li>
+        <li><a class="dropdown-item filter-option-all" href="?filter=all">All</a></li>
+        <li><a class="dropdown-item filter-option-today" href="?filter=today">Today</a></li>
+        <li><a class="dropdown-item filter-option-yesterday" href="?filter=yesterday">Yesterday</a></li>
+        <li><a class="dropdown-item filter-option-week" href="?filter=week">This Week</a></li>
+        <li><a class="dropdown-item filter-option-month" href="?filter=month">This Month</a></li>
+        <li><a class="dropdown-item filter-option-year" href="?filter=year">This Year</a></li>
     </ul>
 </div>
 
@@ -32,7 +32,7 @@
     </thead>
     <tbody>
         {% for transaction in transactions %}
-            <tr>
+            <tr class="{% if transaction.transaction_type == 'Income' %}income-row{% elif transaction.transaction_type == 'Expense' %}expense-row{% endif %}">
                 <td>{{ transaction.date }}</td>
                 <td>{{ transaction.transaction_type }}</td>
                 <td>{{ transaction.category }}</td>
@@ -41,4 +41,46 @@
         {% endfor %}
     </tbody>
 </table>
+
+<style>
+/* Custom styles for filter options */
+.filter-option-all {
+    background-color: #007bff; /* Blue */
+    color: white;
+}
+
+.filter-option-today {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.filter-option-yesterday {
+    background-color: #ffc107; /* Yellow */
+    color: black;
+}
+
+.filter-option-week {
+    background-color: #17a2b8; /* Teal */
+    color: white;
+}
+
+.filter-option-month {
+    background-color: #fd7e14; /* Orange */
+    color: white;
+}
+
+.filter-option-year {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+/* Custom styles for transaction rows */
+.income-row {
+    background-color: #d4edda; /* Light green */
+}
+
+.expense-row {
+    background-color: #f8d7da; /* Light red */
+}
+</style>
 {% endblock %}

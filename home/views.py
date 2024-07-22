@@ -126,3 +126,16 @@ class ExpenseView(View):
         form = ExpenseForm()
         new_category_form = NewExpenseCategoryForm()
         return render(request, 'expense.html', {'form': form, 'new_category_form': new_category_form})
+from django.conf import settings
+from django.utils import translation
+from django.shortcuts import redirect
+
+def set_language(request):
+    user_language = request.GET.get('language', 'ru')
+    if user_language:
+        translation.activate(user_language)
+        print(f"Setting language to: {user_language}")
+        print(f"Session key for language: {settings.LANGUAGE_SESSION_KEY}")  # Debug line
+        request.session[settings.LANGUAGE_SESSION_KEY] = user_language
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
