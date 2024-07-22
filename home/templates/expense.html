@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Expense{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Expense Page</h1>
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-danger btn-block">Chiqim</button>
+</form>
+{% endblock %}
