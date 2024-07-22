@@ -1,3 +1,4 @@
+<!-- expense.html -->
 {% extends 'base.html' %}
 
 {% block title %}Expense{% endblock %}
@@ -7,6 +8,13 @@
 <form method="post" class="mt-4">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-danger btn-block">Chiqim</button>
+    <button type="submit" name="expense_submit" class="btn btn-danger btn-block">Chiqim</button>
+</form>
+
+<h2 class="text-center mt-4">Add New Expense Category</h2>
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    {{ new_category_form.as_p }}
+    <button type="submit" name="new_expense_category" class="btn btn-primary btn-block">Add Category</button>
 </form>
 {% endblock %}

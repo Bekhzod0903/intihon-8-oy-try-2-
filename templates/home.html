@@ -6,6 +6,20 @@
 <h1 class="text-center">Welcome to the Home Page</h1>
 <h2 class="text-center">Total Sum: {{ total_sum }} UZS</h2>
 
+<div class="dropdown text-center">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Filter Transactions
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-item" href="?filter=all">All</a></li>
+        <li><a class="dropdown-item" href="?filter=today">Today</a></li>
+        <li><a class="dropdown-item" href="?filter=yesterday">Yesterday</a></li>
+        <li><a class="dropdown-item" href="?filter=week">This Week</a></li>
+        <li><a class="dropdown-item" href="?filter=month">This Month</a></li>
+        <li><a class="dropdown-item" href="?filter=year">This Year</a></li>
+    </ul>
+</div>
+
 <h3 class="text-center">Transactions</h3>
 <table class="table table-striped">
     <thead>

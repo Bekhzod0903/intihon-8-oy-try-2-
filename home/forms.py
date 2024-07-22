@@ -22,3 +22,19 @@ class ExpenseForm(forms.Form):
         max_digits=10, decimal_places=2,
         widget=forms.NumberInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Enter amount'})
     )
+
+class NewIncomeCategoryForm(forms.ModelForm):
+    class Meta:
+        model = IncomeCategory
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Enter new income category'})
+        }
+
+class NewExpenseCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ExpenseCategory
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Enter new expense category'})
+        }

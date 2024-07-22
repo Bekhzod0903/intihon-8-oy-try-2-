@@ -1,3 +1,4 @@
+<!-- income.html -->
 {% extends 'base.html' %}
 
 {% block title %}Income{% endblock %}
@@ -7,6 +8,13 @@
 <form method="post" class="mt-4">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-success btn-block">Kirim</button>
+    <button type="submit" name="income_submit" class="btn btn-success btn-block">Kirim</button>
+</form>
+
+<h2 class="text-center mt-4">Add New Income Category</h2>
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    {{ new_category_form.as_p }}
+    <button type="submit" name="new_income_category" class="btn btn-primary btn-block">Add Category</button>
 </form>
 {% endblock %}
