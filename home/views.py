@@ -4,6 +4,13 @@ from django.contrib.auth.decorators import login_required
 from .models import Transaction, TotalSum, IncomeCategory, ExpenseCategory
 from .forms import IncomeForm, ExpenseForm, NewIncomeCategoryForm, NewExpenseCategoryForm
 from datetime import datetime, timedelta
+from django.shortcuts import get_object_or_404, redirect
+from .models import Transaction
+from .forms import IncomeForm, ExpenseForm
+
+# views.py
+from django.shortcuts import render, redirect
+from .forms import IncomeForm, ExpenseForm
 
 @login_required
 def home(request):
@@ -13,11 +20,21 @@ def home(request):
     # Filtering logic
     filter_type = request.GET.get('filter', 'all')
     today = datetime.now().date()
-    yesterday = today - timedelta(days=1)
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    if start_date and end_date:
+        try:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+            transactions = transactions.filter(date__date__range=[start_date, end_date])
+        except ValueError:
+            pass
 
     if filter_type == 'today':
         transactions = transactions.filter(date__date=today)
     elif filter_type == 'yesterday':
+        yesterday = today - timedelta(days=1)
         transactions = transactions.filter(date__date=yesterday)
     elif filter_type == 'week':
         start_week = today - timedelta(days=today.weekday())
@@ -32,27 +49,17 @@ def home(request):
         if 'income_submit' in request.POST:
             form = IncomeForm(request.POST)
             if form.is_valid():
-                category = form.cleaned_data['category']
-                amount = form.cleaned_data['amount']
-                Transaction.objects.create(
-                    user=request.user,
-                    amount=amount,
-                    category=category.name,
-                    transaction_type='income'
-                )
+                form.instance.user = request.user
+                form.instance.transaction_type = 'income'
+                form.save()
                 update_total_sum(request.user)
                 return redirect('home')
         elif 'expense_submit' in request.POST:
             form = ExpenseForm(request.POST)
             if form.is_valid():
-                category = form.cleaned_data['category']
-                amount = form.cleaned_data['amount']
-                Transaction.objects.create(
-                    user=request.user,
-                    amount=amount,
-                    category=category.name,
-                    transaction_type='expense'
-                )
+                form.instance.user = request.user
+                form.instance.transaction_type = 'expense'
+                form.save()
                 update_total_sum(request.user)
                 return redirect('home')
 
@@ -61,6 +68,8 @@ def home(request):
         'transactions': transactions,
         'filter_type': filter_type
     })
+
+
 
 def update_total_sum(user):
     transactions = Transaction.objects.filter(user=user)
@@ -138,4 +147,5 @@ def set_language(request):
         print(f"Session key for language: {settings.LANGUAGE_SESSION_KEY}")  # Debug line
         request.session[settings.LANGUAGE_SESSION_KEY] = user_language
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
 

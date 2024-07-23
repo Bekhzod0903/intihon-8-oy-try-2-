@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{% load i18n %}{% get_current_language as LANGUAGE_CODE %}{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}My Website{% endblock %}</title>
+    <title>{% block title %}{% trans "My Website" %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -27,39 +27,36 @@
 <body>
     <header class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">My Website</a>
+            <a class="navbar-brand" href="#">{% trans "My Website" %}</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'home' %}">Home</a>
+                            <a class="nav-link" href="{% url 'home' %}">{% trans "Home" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'income' %}">Kirim</a>
+                            <a class="nav-link" href="{% url 'income' %}">{% trans "Income" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'expense' %}">Chiqim</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                            <a class="nav-link" href="{% url 'expense' %}">{% trans "Expense" %}</a>
                         </li>
                         <!-- Language dropdown -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Choose Language
+                                {% trans "Choose Language" %}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="languageDropdown">
-                                <li><a class="dropdown-item" href="{% url 'set_language' %}?language=uz">Uzbek</a></li>
-                                <li><a class="dropdown-item" href="{% url 'set_language' %}?language=ru">Russian</a></li>
-                                <li><a class="dropdown-item" href="{% url 'set_language' %}?language=en">English</a></li>
+                                <li><a class="dropdown-item" href="{% url 'set_language' %}?language=uz">{% trans "Uzbek" %}</a></li>
+                                <li><a class="dropdown-item" href="{% url 'set_language' %}?language=ru">{% trans "Russian" %}</a></li>
+                                <li><a class="dropdown-item" href="{% url 'set_language' %}?language=en">{% trans "English" %}</a></li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                            <a class="nav-link" href="{% url 'register' %}">{% trans "Register" %}</a>
                         </li>
                     {% endif %}
                 </ul>

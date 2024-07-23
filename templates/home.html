@@ -3,10 +3,32 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 class="text-center">Welcome to the Home Page</h1>
+<h1 class="text-center">{{ translated_text }}</h1>
 <h2 class="text-center">Total Sum: {{ total_sum }} UZS</h2>
 
-<div class="dropdown text-center">
+<!-- Container for Choose Date button and date picker form -->
+<div class="text-center" style="position: relative;">
+    <button class="btn btn-warning" id="chooseDateBtn">Choose Date</button>
+
+    <!-- Date picker form (initially hidden) -->
+    <div id="datePickerForm" style="display:none; position: absolute; top: 0; left: 100%; margin-left: 10px;">
+        <form method="get" action="{% url 'home' %}">
+            <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date:</label>
+                <input type="date" id="startDate" name="start_date" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="endDate" class="form-label">End Date:</label>
+                <input type="date" id="endDate" name="end_date" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- Filter dropdown -->
+<div class="dropdown text-center mt-3">
     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
         Filter Transactions
     </button>
@@ -21,6 +43,7 @@
 </div>
 
 <h3 class="text-center">Transactions</h3>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -28,21 +51,60 @@
             <th>Type</th>
             <th>Category</th>
             <th>Amount</th>
+            <th>payment type</th>
         </tr>
     </thead>
     <tbody>
         {% for transaction in transactions %}
-            <tr class="{% if transaction.transaction_type == 'Income' %}income-row{% elif transaction.transaction_type == 'Expense' %}expense-row{% endif %}">
+            <tr class="{% if transaction.transaction_type == 'income' %}income-row{% elif transaction.transaction_type == 'expense' %}expense-row{% endif %}">
                 <td>{{ transaction.date }}</td>
                 <td>{{ transaction.transaction_type }}</td>
                 <td>{{ transaction.category }}</td>
                 <td>{{ transaction.amount }} UZS</td>
+
+
+                <td>{{ transaction.payment_method }}</td>
+
             </tr>
         {% endfor %}
     </tbody>
 </table>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var chooseDateBtn = document.getElementById('chooseDateBtn');
+    var datePickerForm = document.getElementById('datePickerForm');
+    var cancelBtn = document.getElementById('cancelBtn');
+
+    chooseDateBtn.addEventListener('click', function() {
+        datePickerForm.style.display = 'block';
+    });
+
+    cancelBtn.addEventListener('click', function() {
+        datePickerForm.style.display = 'none';
+    });
+});
+</script>
+
 <style>
+/* Custom styles for Choose Date button */
+#chooseDateBtn {
+    background-color: #ffc107; /* Yellow */
+    color: black;
+}
+
+#chooseDateBtn:hover {
+    background-color: #e0a800; /* Darker yellow */
+}
+
+/* Custom styles for date picker form */
+#datePickerForm {
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: 10px;
+    background-color: #fff;
+}
+
 /* Custom styles for filter options */
 .filter-option-all {
     background-color: #007bff; /* Blue */

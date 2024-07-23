@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # This should come after SessionMiddleware
+    'django.middleware.locale.LocaleMiddleware',
 ]
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
@@ -127,7 +127,7 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
+# https://docs.djangoproject.com/en/5.0/howto/static-files/# This should come after SessionMiddleware
 
 STATIC_URL = 'static/'
 

@@ -1,4 +1,3 @@
-<!-- expense.html -->
 {% extends 'base.html' %}
 
 {% block title %}Expense{% endblock %}
@@ -17,4 +16,25 @@
     {{ new_category_form.as_p }}
     <button type="submit" name="new_expense_category" class="btn btn-primary btn-block">Add Category</button>
 </form>
+
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    function toggleBankNameField() {
+        var paymentMethod = document.getElementById('id_payment_method').value;
+        var bankNameField = document.getElementById('id_bank_name');
+        if (paymentMethod === 'card') {
+            bankNameField.parentElement.style.display = 'block';
+        } else {
+            bankNameField.parentElement.style.display = 'none';
+        }
+    }
+
+    var paymentMethodField = document.getElementById('id_payment_method');
+    if (paymentMethodField) {
+        paymentMethodField.addEventListener('change', toggleBankNameField);
+    }
+
+    toggleBankNameField(); // Initialize the visibility on page load
+});
+</script>
 {% endblock %}
