@@ -98,7 +98,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Tashkent'
 
@@ -118,16 +117,3 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Language settings
-
-LANGUAGES = [
-    ('uz', _('Uzbek')),
-    ('ru', _('Russian')),
-    ('en', _('English')),
-]
-
-LANGUAGE_SESSION_KEY = 'django_language'
-
-LOCALE_PATHS = [
-    BASE_DIR / 'locale',
-]

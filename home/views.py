@@ -170,15 +170,11 @@ class TransactionDeleteView(DeleteView):
 
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
-# views.py
-from django.shortcuts import render, redirect
-from django.utils.translation import activate
-from django.conf import settings
-from django.http import HttpResponseRedirect
 
-def set_language(request):
-    user_language = request.POST.get('language', settings.LANGUAGE_CODE)
-    activate(user_language)
-    response = HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, user_language)
-    return response
+from django.shortcuts import redirect
+
+def set_theme(request, theme):
+    if theme in ['black', 'blue', 'white']:
+        request.session['theme'] = theme  # Set the theme in session
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
