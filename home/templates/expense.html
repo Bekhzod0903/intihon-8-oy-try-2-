@@ -4,9 +4,13 @@
 
 {% block content %}
 <h1 class="text-center">Expense Page</h1>
-<form method="post" class="mt-4">
+<form method="post" class="mt-4" id="expense-form">
     {% csrf_token %}
     {{ form.as_p }}
+    <div class="form-group" id="bank-name-group">
+        <label for="id_bank_name">Bank Name:</label>
+        <input type="text" id="id_bank_name" name="bank_name" class="form-control" />
+    </div>
     <button type="submit" name="expense_submit" class="btn btn-danger btn-block">Chiqim</button>
 </form>
 
@@ -22,10 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleBankNameField() {
         var paymentMethod = document.getElementById('id_payment_method').value;
         var bankNameField = document.getElementById('id_bank_name');
+        var bankNameGroup = document.getElementById('bank-name-group');
         if (paymentMethod === 'card') {
-            bankNameField.parentElement.style.display = 'block';
+            bankNameField.required = true;
+            bankNameGroup.style.display = 'block';
         } else {
-            bankNameField.parentElement.style.display = 'none';
+            bankNameField.required = false;
+            bankNameGroup.style.display = 'none';
         }
     }
 

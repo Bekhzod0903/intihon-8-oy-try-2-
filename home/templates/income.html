@@ -4,12 +4,22 @@
 
 {% block content %}
 <h1 class="text-center">Income Page</h1>
-<form method="post" class="mt-4">
+
+<!-- Income Form -->
+<form method="post" class="mt-4" id="income-form">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" name="income_submit" class="btn btn-success btn-block">Kirim</button>
+
+    <!-- Bank Name Field -->
+    <div class="form-group" id="bank-name-group">
+        <label for="id_bank_name">Bank Name:</label>
+        <input type="text" id="id_bank_name" name="bank_name" class="form-control" />
+    </div>
+
+    <button type="submit" name="income_submit" class="btn btn-success btn-block">Submit</button>
 </form>
 
+<!-- Add New Income Category -->
 <h2 class="text-center mt-4">Add New Income Category</h2>
 <form method="post" class="mt-4">
     {% csrf_token %}
@@ -22,10 +32,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleBankNameField() {
         var paymentMethod = document.getElementById('id_payment_method').value;
         var bankNameField = document.getElementById('id_bank_name');
+        var bankNameGroup = document.getElementById('bank-name-group');
         if (paymentMethod === 'card') {
-            bankNameField.parentElement.style.display = 'block';
+            bankNameField.required = true;
+            bankNameGroup.style.display = 'block';
         } else {
-            bankNameField.parentElement.style.display = 'none';
+            bankNameField.required = false;
+            bankNameGroup.style.display = 'none';
         }
     }
 

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Transaction{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Edit Transaction</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="form-group">
+        {{ form.amount.label_tag }}
+        <input type="number" id="amount" name="amount" step="0.01" value="{{ form.amount.value|floatformat:2 }}" />
+        {% if form.amount.errors %}
+            <div class="invalid-feedback">
+                {% for error in form.amount.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.payment_method.label_tag }}
+        {{ form.payment_method }}
+        {% if form.payment_method.errors %}
+            <div class="invalid-feedback">
+                {% for error in form.payment_method.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.category.label_tag }}
+        {{ form.category }}
+        {% if form.category.errors %}
+            <div class="invalid-feedback">
+                {% for error in form.category.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.transaction_type.label_tag }}
+        {{ form.transaction_type }}
+        {% if form.transaction_type.errors %}
+            <div class="invalid-feedback">
+                {% for error in form.transaction_type.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="step">Step:</label>
+        <input type="number" id="step" name="step" step="0.01" value="1" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save changes</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    const amountInput = document.querySelector('input[name="amount"]');
+    const stepInput = document.querySelector('input[name="step"]');
+
+    if (amountInput && stepInput) {
+        stepInput.addEventListener('input', (event) => {
+            const stepValue = parseFloat(stepInput.value);
+            if (!isNaN(stepValue) && stepValue > 0) {
+                amountInput.setAttribute('step', stepValue);
+            }
+        });
+
+        amountInput.addEventListener('input', (event) => {
+            let value = parseFloat(event.target.value);
+            const stepValue = parseFloat(stepInput.value);
+
+            if (!isNaN(stepValue)) {
+                if (value >= 0) {
+                    // Qiymatni step bo'yicha yaxshilash
+                    let numberValue = Math.round(value / stepValue) * stepValue;
+                    event.target.value = numberValue.toFixed(2);
+                } else {
+                    event.target.value = 0;
+                }
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

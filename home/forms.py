@@ -1,5 +1,19 @@
-from django import forms
+from django.utils.translation import gettext_lazy as _
 from .models import IncomeCategory, ExpenseCategory
+from django import forms
+from .models import Transaction
+
+
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['amount', 'payment_method', 'category', 'transaction_type']
+
+    def clean_amount(self):
+        amount = self.cleaned_data.get('amount')
+        if amount and (amount.as_tuple().exponent < -2):
+            raise forms.ValidationError("Ensure that there are no more than 2 decimal places.")
+        return amount
 
 
 class IncomeForm(forms.Form):
@@ -82,3 +96,11 @@ class NewExpenseCategoryForm(forms.ModelForm):
         }
 
 
+
+
+class LanguageForm(forms.Form):
+    language = forms.ChoiceField(
+        choices=[('uz', _('Uzbek')), ('ru', _('Russian')), ('en', _('English'))],
+        label=_('Choose Language'),
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )

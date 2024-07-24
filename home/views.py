@@ -1,14 +1,11 @@
-from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from .models import Transaction, TotalSum, IncomeCategory, ExpenseCategory
-from .forms import IncomeForm, ExpenseForm, NewIncomeCategoryForm, NewExpenseCategoryForm
+from .models import TotalSum
+from .forms import NewIncomeCategoryForm, NewExpenseCategoryForm
 from datetime import datetime, timedelta
-from django.shortcuts import get_object_or_404, redirect
 from .models import Transaction
-from .forms import IncomeForm, ExpenseForm
-
-# views.py
+from django.urls import reverse_lazy
+from django.views.generic.edit import UpdateView, DeleteView
 from django.shortcuts import render, redirect
 from .forms import IncomeForm, ExpenseForm
 
@@ -17,7 +14,6 @@ def home(request):
     transactions = Transaction.objects.filter(user=request.user)
     total_sum = sum(t.amount if t.transaction_type == 'income' else -t.amount for t in transactions)
 
-    # Filtering logic
     filter_type = request.GET.get('filter', 'all')
     today = datetime.now().date()
     start_date = request.GET.get('start_date')
@@ -135,17 +131,54 @@ class ExpenseView(View):
         form = ExpenseForm()
         new_category_form = NewExpenseCategoryForm()
         return render(request, 'expense.html', {'form': form, 'new_category_form': new_category_form})
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Transaction
+from .forms import TransactionForm
+
+# views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Transaction
+from .forms import TransactionForm
+
+
+@login_required
+def edit_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id, user=request.user)
+
+    if request.method == 'POST':
+        form = TransactionForm(request.POST, instance=transaction)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                'home')  # Tahrirlangan tranzaktsiyani saqlaganidan keyin qayerga yo'naltirilishini belgilash
+        else:
+            print(form.errors)  # Formadagi xatoliklarni konsolga chiqarish
+    else:
+        form = TransactionForm(instance=transaction)
+
+    return render(request, 'transaction_form.html', {'form': form})
+
+
+class TransactionDeleteView(DeleteView):
+    model = Transaction
+    template_name = 'transaction_confirm_delete.html'
+    success_url = reverse_lazy('home')
+
+    def get_queryset(self):
+        return Transaction.objects.filter(user=self.request.user)
+# views.py
+from django.shortcuts import render, redirect
+from django.utils.translation import activate
 from django.conf import settings
-from django.utils import translation
-from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 
 def set_language(request):
-    user_language = request.GET.get('language', 'ru')
-    if user_language:
-        translation.activate(user_language)
-        print(f"Setting language to: {user_language}")
-        print(f"Session key for language: {settings.LANGUAGE_SESSION_KEY}")  # Debug line
-        request.session[settings.LANGUAGE_SESSION_KEY] = user_language
-    return redirect(request.META.get('HTTP_REFERER', '/'))
-
-
+    user_language = request.POST.get('language', settings.LANGUAGE_CODE)
+    activate(user_language)
+    response = HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, user_language)
+    return response
