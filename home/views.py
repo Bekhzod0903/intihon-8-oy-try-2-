@@ -1,13 +1,16 @@
 from django.views import View
-from django.contrib.auth.decorators import login_required
 from .models import TotalSum
 from .forms import NewIncomeCategoryForm, NewExpenseCategoryForm
 from datetime import datetime, timedelta
-from .models import Transaction
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView, DeleteView
-from django.shortcuts import render, redirect
 from .forms import IncomeForm, ExpenseForm
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Transaction
+from .forms import TransactionForm
+
+
 
 @login_required
 def home(request):
@@ -133,17 +136,6 @@ class ExpenseView(View):
         return render(request, 'expense.html', {'form': form, 'new_category_form': new_category_form})
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Transaction
-from .forms import TransactionForm
-
-# views.py
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Transaction
-from .forms import TransactionForm
-
 
 @login_required
 def edit_transaction(request, transaction_id):
@@ -154,9 +146,9 @@ def edit_transaction(request, transaction_id):
         if form.is_valid():
             form.save()
             return redirect(
-                'home')  # Tahrirlangan tranzaktsiyani saqlaganidan keyin qayerga yo'naltirilishini belgilash
+                'home')
         else:
-            print(form.errors)  # Formadagi xatoliklarni konsolga chiqarish
+            print(form.errors)
     else:
         form = TransactionForm(instance=transaction)
 
@@ -171,10 +163,9 @@ class TransactionDeleteView(DeleteView):
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
 
-from django.shortcuts import redirect
 
 def set_theme(request, theme):
     if theme in ['black', 'blue', 'white']:
-        request.session['theme'] = theme  # Set the theme in session
+        request.session['theme'] = theme
     return redirect(request.META.get('HTTP_REFERER', '/'))
 

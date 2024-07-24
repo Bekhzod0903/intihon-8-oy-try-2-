@@ -6,7 +6,7 @@ from django.db import models
 
 class Transaction(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)  # Onlik joylar soni 2
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_method = models.CharField(max_length=250, choices=[('Cash', 'Cash'), ('Card', 'Card')])
     category = models.CharField(max_length=100)
     transaction_type = models.CharField(max_length=10)

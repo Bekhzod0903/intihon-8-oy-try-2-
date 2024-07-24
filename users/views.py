@@ -30,20 +30,7 @@ class RegisterView(View):
             }
             return render(request, 'register.html', context=context)
 
-        # username = request.POST['username']
-        # email = request.POST['email']
-        # first_name = request.POST['first_name']
-        # last_name = request.POST['last_name']
-        # password = request.POST['password']
-        #
-        # user = CustomUser.objects.create_user(
-        #     username=username,
-        #     email=email,
-        #     first_name=first_name,
-        #     last_name=last_name,
-        # )
-        # user.set_password(password)
-        # user.save()
+
 
 class LoginView(View):
     def get(self, request):
